@@ -6,6 +6,7 @@ module Main where
 import           Control.Concurrent (threadDelay)
 import           Control.Monad
 import           Data.Aeson (ToJSON (..), encode)
+import qualified Data.Text.Encoding as TE
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL8
 import qualified Data.ByteString.Lazy as BSL
@@ -226,7 +227,7 @@ instance ToJSON EmotivPacket
 instance ToJSON EmotivState
 
 instance ToJSON EmotivRawData where
-  toJSON = toJSON . Base64.encode . emotivRawDataBytes
+  toJSON = toJSON . TE.decodeUtf8 . Base64.encode . emotivRawDataBytes
 
 instance ToJSON Sensor where
   toJSON = toJSON . show
