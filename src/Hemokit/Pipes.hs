@@ -13,9 +13,9 @@ rawSource dev = void $ untilNothing (liftIO (readEmotivRaw dev)) yield
 parsePackets :: (MonadIO m) => EmotivDevice -> Pipe EmotivRawData (EmotivState, EmotivPacket) m r
 parsePackets dev = P.mapM (liftIO . updateEmotivState dev)
 
-emotivStates :: (MonadIO m) => EmotivDevice -> Proxy a' a () EmotivState m ()
+emotivStates :: (MonadIO m) => EmotivDevice -> Producer EmotivState m () -- Proxy a' a () EmotivState m ()
 emotivStates dev = void (rawSource dev >-> parsePackets dev >-> P.map fst)
 
-emotivPackets :: (MonadIO m) => EmotivDevice -> Proxy a' a () EmotivPacket m ()
+emotivPackets :: (MonadIO m) => EmotivDevice -> Producer EmotivPacket m ()
 emotivPackets dev = void (rawSource dev >-> parsePackets dev >-> P.map snd)
 
